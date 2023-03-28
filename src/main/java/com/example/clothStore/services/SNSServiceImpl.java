@@ -4,8 +4,7 @@ import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sns.model.MessageAttributeValue;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.SubscribeRequest;
-import com.example.clothStore.entities.Order;
-import com.example.clothStore.entities.Status;
+import com.example.clothStore.entities.Send;
 import com.example.clothStore.services.interfaces.ISNSService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -31,17 +30,17 @@ public class SNSServiceImpl implements ISNSService {
     }
 
     @Override
-    public void sendNotification(Status status, String topicArn) {
+    public void sendNotification(Send send, String topicArn) {
         String message = "";
-        String orderStatus = status.getName();
+        String orderStatus = send.getStatus().getName();
         System.out.println(orderStatus);
 
         switch (orderStatus){
             case "inProcess":
-                message = "Tu paquete " + generateTrackingId() + " ha empezado su recorrido hacia su destino.";
+                message = "Tu paquete " + send.getGuide() + " ha empezado su recorrido hacia su destino.";
                 break;
             case "delivered":
-                message = "Tu paquete " + generateTrackingId() + " ha sido entregado directamente a ";
+                message = "Tu paquete " + send.getGuide() + " ha sido entregado directamente a ";
                 break;
         }
 
@@ -50,8 +49,8 @@ public class SNSServiceImpl implements ISNSService {
         PublishRequest publishRequest = new PublishRequest()
                 .withTopicArn(topicArn)
                 .withMessage(message)
-                .withSubject("Actualizacion paquete " + generateTrackingId())
-                .withMessageAttributes(generateEmailAttribute(status.getName()));
+                .withSubject("Actualizacion paquete " + send.getGuide())
+                .withMessageAttributes(generateEmailAttribute(send.getAddress()));
         amazonSNSClient.publish(publishRequest);
     }
 
@@ -61,16 +60,4 @@ public class SNSServiceImpl implements ISNSService {
         return messageAttributes;
     }
 
-    public static String generateTrackingId(){
-        UUID uuid = UUID.randomUUID();
-        String randomUUIDString = uuid.toString();
-        String trackingId = "PM" + randomUUIDString.replaceAll("-", "").substring(0, 12);
-        return trackingId.toUpperCase();
-    }
-
-    private String generateUniqueTrackingId(){
-        String trackingId;
-        trackingId = generateTrackingId();
-        return trackingId;
-    }
 }

@@ -96,8 +96,6 @@ public class OderServiceImpl implements IOrderService {
         Order order = findOrderById(id);
         order = update(request, order);
         OrderResponse response = from(repository.save(order));
-        Status status = statusService.findStatusByName(request.getStatus());
-        snsService.sendNotification(status,"Estado actual del envio");
         return BaseResponse.builder()
                 .data(response)
                 .message("Order status update")

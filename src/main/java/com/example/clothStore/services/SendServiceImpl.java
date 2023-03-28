@@ -11,15 +11,13 @@ import com.example.clothStore.entities.Send;
 import com.example.clothStore.entities.Status;
 import com.example.clothStore.entities.User;
 import com.example.clothStore.repositories.ISendRepository;
-import com.example.clothStore.services.interfaces.IOrderService;
-import com.example.clothStore.services.interfaces.ISendService;
-import com.example.clothStore.services.interfaces.IStatusService;
-import com.example.clothStore.services.interfaces.IUserService;
+import com.example.clothStore.services.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @Repository
@@ -36,6 +34,9 @@ public class SendServiceImpl implements ISendService {
 
     @Autowired
     private IStatusService statusService;
+
+    @Autowired
+    private ISNSService snsService;
 
     @Override
     public Send findSendById(Long id) {
@@ -77,6 +78,7 @@ public class SendServiceImpl implements ISendService {
         Send send = new Send();
         send = create(request,send);
         response = from(repository.save(send));
+
         return BaseResponse.builder()
                 .data(response)
                 .message("Send created")
@@ -90,6 +92,8 @@ public class SendServiceImpl implements ISendService {
         Send send = findSendById(id);
         send = update(request,send);
         SendResponse response = from(repository.save(send));
+        Status status = statusService.findStatusByName(request.getStatus());
+        snsService.sendNotification(send,"arn:aws:sns:us-east-1:626350110357:PostmenNotifications");
         return BaseResponse.builder()
                 .data(response)
                 .message("Send updated")
@@ -137,7 +141,7 @@ public class SendServiceImpl implements ISendService {
         Status status = statusService.findStatusByName(request.getStatus());
         send.setStatus(status);
 
-        send.setGuide(request.getGuide());
+        send.setGuide(generateTrackingId());
         send.setAddress(request.getAddress());
         return send;
     }
@@ -147,4 +151,12 @@ public class SendServiceImpl implements ISendService {
         send.setStatus(status);
         return send;
     }
+
+    public static String generateTrackingId(){
+        UUID uuid = UUID.randomUUID();
+        String randomUUIDString = uuid.toString();
+        String trackingId = "PM" + randomUUIDString.replaceAll("-", "").substring(0, 12);
+        return trackingId.toUpperCase();
+    }
+
 }

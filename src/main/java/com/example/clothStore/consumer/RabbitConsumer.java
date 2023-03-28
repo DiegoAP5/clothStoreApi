@@ -1,9 +1,19 @@
 package com.example.clothStore.consumer;
 
 
+import com.example.clothStore.Notification.RabbitConfigure;
+import com.example.clothStore.Notification.RabbitNotification;
+import com.example.clothStore.controllers.dtos.requests.CreateOrderRequest;
+import com.example.clothStore.controllers.dtos.requests.UpdateSendRequest;
+import com.example.clothStore.services.interfaces.IOrderService;
+import com.example.clothStore.services.interfaces.ISendService;
+import com.example.clothStore.services.interfaces.IUserService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
@@ -11,31 +21,29 @@ import org.springframework.stereotype.Component;
 @Component
 public class RabbitConsumer {
 
-    @RabbitListener(queues = {"${sacavix.queue.name.notification}"})
+    @Autowired
+    private IOrderService service;
+
+    @Autowired
+    private ISendService sendService;
+
+    @Autowired
+    private IUserService userService;
+
+
+    @RabbitListener(queues = RabbitConfigure.QUEUE)
     public void notification(@Payload Data data){
-        log.info("Notification send: {}",data);
-
+        log.info("Received status: {}",data);
+        service.create((CreateOrderRequest) data);
         makeSlow();
     }
 
-    @RabbitListener(queues = {"${sacavix.queue.name.cart}"})
-    public void order(@Payload Data data){
-        log.info("Cart status: {}",data);
-
-        makeSlow();
-    }
-
-    @RabbitListener(queues = {"${spring.rabbitmq.queue.name.notification}"})
-    public void shipping(@Payload Data data){
-        log.info("Shipping status: {}",data);
-
-        makeSlow();
-    }
-
-    @RabbitListener(queues = {"${sacavix.queue.name.refund}"})
-    public void refund(@Payload Data data){
-        log.info("Refund status: {}",data);
-
+    @RabbitListener(queues = RabbitNotification.QUEUE)
+    public void order(String data) throws JsonProcessingException {
+        log.info("Order status: {}",data);
+        ObjectMapper objectMapper = new ObjectMapper();
+        Long id = Long.valueOf(data.substring(-1,0));
+        sendService.update(userService.findUserById(id).getId(),objectMapper.readValue(data, UpdateSendRequest.class));
         makeSlow();
     }
 

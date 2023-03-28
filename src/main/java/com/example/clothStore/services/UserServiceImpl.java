@@ -72,7 +72,7 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user = create(request,user);
         UserResponse response = from(repository.save(user));
-        snsService.subscribeEmail("", user.getEmail());
+        snsService.subscribeEmail("arn:aws:sns:us-east-1:626350110357:PostmenNotifications", user.getEmail());
         return BaseResponse.builder()
                 .data(response)
                 .message("user created")
