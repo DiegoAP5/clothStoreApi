@@ -5,11 +5,8 @@ import com.example.clothStore.controllers.dtos.requests.UpdateRefundRequest;
 import com.example.clothStore.controllers.dtos.responses.BaseResponse;
 import com.example.clothStore.controllers.dtos.responses.RefundResponse;
 import com.example.clothStore.controllers.excepcion.ClothExcepcion;
-import com.example.clothStore.entities.Order;
+import com.example.clothStore.entities.*;
 import com.example.clothStore.entities.Projections.RefundProjection;
-import com.example.clothStore.entities.Refund;
-import com.example.clothStore.entities.Status;
-import com.example.clothStore.entities.User;
 import com.example.clothStore.repositories.IRefundRepository;
 import com.example.clothStore.services.interfaces.IOrderService;
 import com.example.clothStore.services.interfaces.IRefundService;
@@ -108,7 +105,15 @@ public class RefundServiceImpl implements IRefundService {
 
     @Override
     public Refund updateStatus(Long id, String statusName) {
-        return null;
+        Refund refund = setStatus(id,statusName);
+        return repository.save(refund);
+    }
+
+    private Refund setStatus(Long id, String statusName){
+        Refund refund = findRefundById(id);
+        Status status1 = statusService.findStatusByName(statusName);
+        refund.setStatus(status1);
+        return refund;
     }
 
     private RefundResponse from(RefundProjection refund){
@@ -150,4 +155,5 @@ public class RefundServiceImpl implements IRefundService {
         refund.setStatus(status);
         return refund;
     }
+
 }

@@ -6,6 +6,7 @@ import com.example.clothStore.Notification.RabbitNotification;
 import com.example.clothStore.controllers.dtos.requests.CreateOrderRequest;
 import com.example.clothStore.controllers.dtos.requests.UpdateSendRequest;
 import com.example.clothStore.services.interfaces.IOrderService;
+import com.example.clothStore.services.interfaces.IRefundService;
 import com.example.clothStore.services.interfaces.ISendService;
 import com.example.clothStore.services.interfaces.IUserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,13 +26,20 @@ public class RabbitConsumer {
     private ISendService sendService;
 
     @Autowired
-    private IUserService userService;
+    private IRefundService refundService;
 
 
     @RabbitListener(queues = "order_delivered")
     public void notification(UpdateSendRequest request){
         log.info("Received status: {}",request);
         sendService.updateStatusToDelivered(request.getId(), request.getStatus());
+        makeSlow();
+    }
+
+    @RabbitListener(queues = "notification")
+    public void refund(UpdateSendRequest request){
+        log.info("Received status: {}",request);
+        refundService.updateStatus(request.getId(), request.getStatus());
         makeSlow();
     }
 
