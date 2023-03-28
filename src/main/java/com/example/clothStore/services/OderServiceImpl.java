@@ -11,10 +11,7 @@ import com.example.clothStore.entities.Projections.OrderProjection;
 import com.example.clothStore.entities.Status;
 import com.example.clothStore.entities.User;
 import com.example.clothStore.repositories.IOrderRepository;
-import com.example.clothStore.services.interfaces.IClothService;
-import com.example.clothStore.services.interfaces.IOrderService;
-import com.example.clothStore.services.interfaces.IStatusService;
-import com.example.clothStore.services.interfaces.IUserService;
+import com.example.clothStore.services.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -30,6 +27,9 @@ public class OderServiceImpl implements IOrderService {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private ISNSService snsService;
 
     @Autowired
     private IStatusService statusService;
@@ -96,6 +96,8 @@ public class OderServiceImpl implements IOrderService {
         Order order = findOrderById(id);
         order = update(request, order);
         OrderResponse response = from(repository.save(order));
+        Status status = statusService.findStatusByName(request.getStatus());
+        snsService.sendNotification(status,"Estado actual del envio");
         return BaseResponse.builder()
                 .data(response)
                 .message("Order status update")
@@ -163,6 +165,7 @@ public class OderServiceImpl implements IOrderService {
     private Order update(UpdateOrderRequest request, Order order){
         Status status = statusService.findStatusByName(request.getStatus());
         order.setStatus(status);
+
         return  order;
     }
 }

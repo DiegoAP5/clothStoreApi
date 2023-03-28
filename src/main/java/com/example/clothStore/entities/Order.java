@@ -30,6 +30,10 @@ public class Order {
 
     private BigDecimal total;
 
+    private String address;
+
+    private String guide;
+
     @ManyToOne
     @JoinColumn(name = "status_id",referencedColumnName = "id")
     private Status status;

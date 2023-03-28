@@ -6,6 +6,7 @@ import com.example.clothStore.controllers.dtos.responses.UserResponse;
 import com.example.clothStore.controllers.excepcion.ClothExcepcion;
 import com.example.clothStore.entities.User;
 import com.example.clothStore.repositories.IUserRepository;
+import com.example.clothStore.services.interfaces.ISNSService;
 import com.example.clothStore.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,10 @@ public class UserServiceImpl implements IUserService {
 
     @Autowired
     private IUserRepository repository;
+
+    @Autowired
+    private ISNSService snsService;
+
     @Override
     public User findUserById(Long id) {
         return repository.findById(id).orElseThrow(() -> new ClothExcepcion("User not found "));
@@ -67,6 +72,7 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user = create(request,user);
         UserResponse response = from(repository.save(user));
+        snsService.subscribeEmail("", user.getEmail());
         return BaseResponse.builder()
                 .data(response)
                 .message("user created")
