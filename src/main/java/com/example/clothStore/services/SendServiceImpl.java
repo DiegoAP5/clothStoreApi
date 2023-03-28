@@ -105,7 +105,8 @@ public class SendServiceImpl implements ISendService {
         Send send = setStatus(id,statusName);
         String message = "Actualizacion de la orden, su orden se encuentra en " + send.getStatus().getName();
         String subject = "Orden con guia " + send.getGuide();
-        snsService.sendNotification(send.getUser().getId(), message, subject,send.getUser().getEmail());
+        snsService.sendNotification(message, subject,send.getUser().getEmail());
+        System.out.println(send.getUser().getEmail());
         return repository.save(send);
     }
 

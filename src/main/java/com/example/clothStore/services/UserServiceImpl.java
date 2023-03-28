@@ -72,7 +72,7 @@ public class UserServiceImpl implements IUserService {
         User user = new User();
         user = create(request,user);
         UserResponse response = from(repository.save(user));
-        snsService.subscribeEmail("arn:aws:sns:us-east-1:626350110357:PostmenNotifications", user.getEmail());
+        snsService.subscribeEmail("arn:aws:sns:us-east-1:270034414547:Message-Topic", user.getEmail());
         return BaseResponse.builder()
                 .data(response)
                 .message("user created")
@@ -93,6 +93,7 @@ public class UserServiceImpl implements IUserService {
         response.setName(user.getName());
         response.setEmail(user.getEmail());
         response.setCardNumber(user.getCardNumber());
+        response.setRole(user.getRole());
         return response;
     }
 
@@ -101,7 +102,7 @@ public class UserServiceImpl implements IUserService {
         user.setEmail(request.getEmail());
         user.setPassword(request.getPassword());
         user.setCardNumber(request.getCardNumber());
-
+        user.setRole("user");
         return user;
     }
 

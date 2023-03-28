@@ -9,6 +9,6 @@ public interface ISNSService {
 
     void subscribeEmail(String topicArn, String email);
 
-    void sendNotification(Long userId, String message, String subject, String email);
+    void sendNotification(String message, String subject, String email);
 
 }

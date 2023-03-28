@@ -20,4 +20,6 @@ public class CreateUserRequest {
 
     @NotNull @NotBlank
     private String cardNumber;
+
+    private String role;
 }

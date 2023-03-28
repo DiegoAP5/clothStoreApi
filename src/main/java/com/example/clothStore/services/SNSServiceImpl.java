@@ -33,12 +33,12 @@ public class SNSServiceImpl implements ISNSService {
     }
 
     @Override
-    public void sendNotification(Long userId, String message,  String subject, String email) {
+    public void sendNotification(String message,  String subject, String email) {
 
         System.out.println(message);
 
         PublishRequest publishRequest = new PublishRequest()
-                .withTopicArn("arn:aws:sns:us-east-1:626350110357:PostmenNotifications")
+                .withTopicArn("arn:aws:sns:us-east-1:270034414547:Message-Topic")
                 .withMessage(message)
                 .withSubject(subject)
                 .withMessageAttributes(generateEmailAttribute(email));

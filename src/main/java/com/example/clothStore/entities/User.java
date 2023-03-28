@@ -19,7 +19,7 @@ public class User {
     @NotNull
     private String name;
 
-    @NotNull
+    @NotNull @Column(unique = true)
     private String email;
 
     @NotNull
@@ -27,6 +27,8 @@ public class User {
 
     @NotNull
     private String cardNumber;
+
+    private String role;
 
     @OneToMany(mappedBy = "user",cascade = CascadeType.ALL)
     private List<Order>orders;
