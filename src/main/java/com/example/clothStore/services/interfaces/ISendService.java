@@ -19,5 +19,7 @@ public interface ISendService {
 
     BaseResponse update(Long id, UpdateSendRequest request);
 
+    Send updateStatusToDelivered(Long id, String statusName);
+
     void delete(Long id);
 }

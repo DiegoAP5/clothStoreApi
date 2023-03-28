@@ -103,6 +103,12 @@ public class SendServiceImpl implements ISendService {
     }
 
     @Override
+    public Send updateStatusToDelivered(Long id,String statusName) {
+        Send send = setStatus(id,statusName);
+        return repository.save(send);
+    }
+
+    @Override
     public void delete(Long id) {
         findSendById(id);
         repository.deleteById(id);
@@ -159,4 +165,10 @@ public class SendServiceImpl implements ISendService {
         return trackingId.toUpperCase();
     }
 
+    private Send setStatus(Long id, String statusName){
+        Send send = findSendById(id);
+        Status status1 = statusService.findStatusByName(statusName);
+        send.setStatus(status1);
+        return send;
+    }
 }

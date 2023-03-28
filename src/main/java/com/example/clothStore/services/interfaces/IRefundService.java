@@ -20,4 +20,6 @@ public interface IRefundService {
     BaseResponse update(Long id,UpdateRefundRequest request);
 
     void delete(Long id);
+
+    Refund updateStatus(Long id, String statusName);
 }

@@ -106,6 +106,11 @@ public class RefundServiceImpl implements IRefundService {
     public void delete(Long id) {
     }
 
+    @Override
+    public Refund updateStatus(Long id, String statusName) {
+        return null;
+    }
+
     private RefundResponse from(RefundProjection refund){
         RefundResponse response = new RefundResponse();
         response.setId(refund.getId());

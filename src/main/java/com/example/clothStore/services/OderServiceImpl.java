@@ -29,9 +29,6 @@ public class OderServiceImpl implements IOrderService {
     private IUserService userService;
 
     @Autowired
-    private ISNSService snsService;
-
-    @Autowired
     private IStatusService statusService;
 
     @Autowired

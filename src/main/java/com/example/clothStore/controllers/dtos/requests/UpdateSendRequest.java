@@ -11,5 +11,5 @@ public class UpdateSendRequest {
     private String status;
 
     @NotBlank
-    private String guide;
+    private Long id;
 }

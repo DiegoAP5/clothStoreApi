@@ -10,9 +10,9 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitConfigure {
-    public static final String QUEUE = "shipping";
+    public static final String QUEUE = "order_inProcess";
     public static final String EXCHANGE = "ms.event";
-    public static final String ROUTING_KEY = "ms.event.shipping";
+    public static final String ROUTING_KEY = "ms.event.order.inProcess";
 
     @Bean
     public Queue queue(){

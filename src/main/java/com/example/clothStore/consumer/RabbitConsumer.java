@@ -22,28 +22,16 @@ import org.springframework.stereotype.Component;
 public class RabbitConsumer {
 
     @Autowired
-    private IOrderService service;
-
-    @Autowired
     private ISendService sendService;
 
     @Autowired
     private IUserService userService;
 
 
-    @RabbitListener(queues = RabbitConfigure.QUEUE)
-    public void notification(@Payload Data data){
-        log.info("Received status: {}",data);
-        service.create((CreateOrderRequest) data);
-        makeSlow();
-    }
-
-    @RabbitListener(queues = RabbitNotification.QUEUE)
-    public void order(String data) throws JsonProcessingException {
-        log.info("Order status: {}",data);
-        ObjectMapper objectMapper = new ObjectMapper();
-        Long id = Long.valueOf(data.substring(-1,0));
-        sendService.update(userService.findUserById(id).getId(),objectMapper.readValue(data, UpdateSendRequest.class));
+    @RabbitListener(queues = "order_delivered")
+    public void notification(UpdateSendRequest request){
+        log.info("Received status: {}",request);
+        sendService.updateStatusToDelivered(request.getId(), request.getStatus());
         makeSlow();
     }
 
