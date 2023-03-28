@@ -92,8 +92,6 @@ public class SendServiceImpl implements ISendService {
         Send send = findSendById(id);
         send = update(request,send);
         SendResponse response = from(repository.save(send));
-        Status status = statusService.findStatusByName(request.getStatus());
-        snsService.sendNotification(send,"arn:aws:sns:us-east-1:626350110357:PostmenNotifications");
         return BaseResponse.builder()
                 .data(response)
                 .message("Send updated")
@@ -103,8 +101,11 @@ public class SendServiceImpl implements ISendService {
     }
 
     @Override
-    public Send updateStatusToDelivered(Long id,String statusName) {
+    public Send updateStatusToDelivered(Long id, String statusName) {
         Send send = setStatus(id,statusName);
+        String message = "Actualizacion de la orden, su orden se encuentra en " + send.getStatus().getName();
+        String subject = "Orden con guia " + send.getGuide();
+        snsService.sendNotification(send.getUser().getId(), message, subject,send.getUser().getEmail());
         return repository.save(send);
     }
 

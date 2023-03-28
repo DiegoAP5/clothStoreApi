@@ -5,13 +5,11 @@ import com.example.clothStore.controllers.dtos.requests.UpdateOrderRequest;
 import com.example.clothStore.controllers.dtos.responses.BaseResponse;
 import com.example.clothStore.controllers.dtos.responses.OrderResponse;
 import com.example.clothStore.controllers.excepcion.ClothExcepcion;
-import com.example.clothStore.entities.Cloth;
-import com.example.clothStore.entities.Order;
+import com.example.clothStore.entities.*;
 import com.example.clothStore.entities.Projections.OrderProjection;
-import com.example.clothStore.entities.Status;
-import com.example.clothStore.entities.User;
 import com.example.clothStore.repositories.IOrderRepository;
 import com.example.clothStore.services.interfaces.*;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -106,6 +104,19 @@ public class OderServiceImpl implements IOrderService {
         findOrderById(id);
         repository.deleteById(id);
 
+    }
+
+    @Override
+    public Order updateStatus(Long id, String statusName) {
+        Order order = setStatus(id,statusName);
+        return repository.save(order);
+    }
+
+    private Order setStatus(Long id, String statusName){
+        Order order = findOrderById(id);
+        Status status1 = statusService.findStatusByName(statusName);
+        order.setStatus(status1);
+        return order;
     }
 
     private OrderResponse addOneClothToExistingOrder(Long id, int quantity){

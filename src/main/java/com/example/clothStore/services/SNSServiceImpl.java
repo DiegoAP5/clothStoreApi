@@ -5,7 +5,10 @@ import com.amazonaws.services.sns.model.MessageAttributeValue;
 import com.amazonaws.services.sns.model.PublishRequest;
 import com.amazonaws.services.sns.model.SubscribeRequest;
 import com.example.clothStore.entities.Send;
+import com.example.clothStore.entities.User;
+import com.example.clothStore.services.interfaces.IOrderService;
 import com.example.clothStore.services.interfaces.ISNSService;
+import com.example.clothStore.services.interfaces.IUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -30,27 +33,15 @@ public class SNSServiceImpl implements ISNSService {
     }
 
     @Override
-    public void sendNotification(Send send, String topicArn) {
-        String message = "";
-        String orderStatus = send.getStatus().getName();
-        System.out.println(orderStatus);
-
-        switch (orderStatus){
-            case "inProcess":
-                message = "Tu paquete " + send.getGuide() + " ha empezado su recorrido hacia su destino.";
-                break;
-            case "delivered":
-                message = "Tu paquete " + send.getGuide() + " ha sido entregado directamente a ";
-                break;
-        }
+    public void sendNotification(Long userId, String message,  String subject, String email) {
 
         System.out.println(message);
 
         PublishRequest publishRequest = new PublishRequest()
-                .withTopicArn(topicArn)
+                .withTopicArn("arn:aws:sns:us-east-1:626350110357:PostmenNotifications")
                 .withMessage(message)
-                .withSubject("Actualizacion paquete " + send.getGuide())
-                .withMessageAttributes(generateEmailAttribute(send.getAddress()));
+                .withSubject(subject)
+                .withMessageAttributes(generateEmailAttribute(email));
         amazonSNSClient.publish(publishRequest);
     }
 

@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Primary;
 @Configuration
 public class SNSConfigure {
 
-    public static final String SECRET_KEY = "b+bhylV3CTrdrIXFEAHWGkQl+AyLgriVEd1VxfTS";
-    public static final String ACCESS_KEY = "AKIA2FYOJOURW4PI55HR";
+    public static final String SECRET_KEY = "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";
+    public static final String ACCESS_KEY = "AKIAT5X2OFPJZURIKEIZ";
 
     @Primary
     @Bean

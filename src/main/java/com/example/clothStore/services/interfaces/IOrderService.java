@@ -20,4 +20,6 @@ public interface IOrderService {
     BaseResponse update(Long id, UpdateOrderRequest request);
 
     void delete(Long id);
+
+    Order updateStatus(Long id, String statusName);
 }

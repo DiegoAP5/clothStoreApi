@@ -28,18 +28,28 @@ public class RabbitConsumer {
     @Autowired
     private IRefundService refundService;
 
+    @Autowired
+    private IOrderService orderService;
+
 
     @RabbitListener(queues = "order_delivered")
     public void notification(UpdateSendRequest request){
-        log.info("Received status: {}",request);
+        log.info("Received ship status: {}",request);
         sendService.updateStatusToDelivered(request.getId(), request.getStatus());
         makeSlow();
     }
 
     @RabbitListener(queues = "notification")
     public void refund(UpdateSendRequest request){
-        log.info("Received status: {}",request);
+        log.info("Received refund status: {}",request);
         refundService.updateStatus(request.getId(), request.getStatus());
+        makeSlow();
+    }
+
+    @RabbitListener(queues = "order_inProcess")
+    public void order(UpdateSendRequest request){
+        log.info("Received order status: {}",request);
+        orderService.updateStatus(request.getId(), request.getStatus());
         makeSlow();
     }
 
