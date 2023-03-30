@@ -38,7 +38,7 @@ public class SNSServiceImpl implements ISNSService {
         System.out.println(message);
 
         PublishRequest publishRequest = new PublishRequest()
-                .withTopicArn("arn:aws:sns:us-east-1:270034414547:Message-Topic")
+                    .withTopicArn("")
                 .withMessage(message)
                 .withSubject(subject)
                 .withMessageAttributes(generateEmailAttribute(email));
