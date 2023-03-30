@@ -31,7 +31,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public User getNoUserByName(String name) {
-        return repository.getUserByEmail(name);
+        return repository.getUserByName(name);
     }
 
     @Override

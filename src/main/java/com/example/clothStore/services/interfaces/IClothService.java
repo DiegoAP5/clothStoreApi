@@ -11,7 +11,7 @@ public interface IClothService {
 
     Cloth findClothById(Long id);
 
-    List<ClothProjection> findClothByName(String name);
+    Cloth findClothByName(String name);
 
     BaseResponse listClothes();
 

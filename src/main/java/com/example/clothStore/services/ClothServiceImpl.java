@@ -5,6 +5,7 @@ import com.example.clothStore.controllers.dtos.responses.BaseResponse;
 import com.example.clothStore.controllers.dtos.responses.ClothResponse;
 import com.example.clothStore.controllers.excepcion.ClothExcepcion;
 import com.example.clothStore.entities.Cloth;
+import com.example.clothStore.entities.Order;
 import com.example.clothStore.entities.Projections.ClothProjection;
 import com.example.clothStore.repositories.IClothRepository;
 import com.example.clothStore.services.interfaces.IClothService;
@@ -25,7 +26,7 @@ public class ClothServiceImpl implements IClothService {
     }
 
     @Override
-    public List<ClothProjection> findClothByName(String name) {
+    public Cloth findClothByName(String name) {
         return repository.getClothByName(name);
     }
 
@@ -53,7 +54,7 @@ public class ClothServiceImpl implements IClothService {
 
     @Override
     public BaseResponse getClothByName(String name) {
-        List<ClothResponse> response = findClothByName(name).stream().map(this::from).collect(Collectors.toList());
+        ClothResponse response = from(findClothByName(name));
         return BaseResponse.builder()
                 .data(response)
                 .message("Cloth searched by name")

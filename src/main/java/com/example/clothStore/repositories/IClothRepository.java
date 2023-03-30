@@ -13,7 +13,5 @@ public interface IClothRepository extends JpaRepository<Cloth,Long> {
     @Query(value = "select cloths.* from cloths",nativeQuery = true)
     List<ClothProjection> listClothes();
 
-    @Query(value = "select cloths.* from cloths"+
-            "where cloths.name =:%clothName%",nativeQuery = true)
-    List<ClothProjection> getClothByName(String clothName);
+    Cloth getClothByName(String clothName);
 }
