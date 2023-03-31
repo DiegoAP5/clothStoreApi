@@ -34,6 +34,10 @@ public class UserServiceImpl implements IUserService {
         return repository.getUserByName(name);
     }
 
+    public User getNoUserByEmail(String email) {
+        return repository.getUserByEmail(email);
+    }
+
     @Override
     public BaseResponse listUsers() {
         List<UserResponse> responses = repository.findAll().stream().map(this::from).collect(Collectors.toList());
@@ -62,6 +66,17 @@ public class UserServiceImpl implements IUserService {
         return BaseResponse.builder()
                 .data(response)
                 .message("User by name")
+                .success(Boolean.TRUE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
+    @Override
+    public BaseResponse getUserByEmail(String email) {
+        UserResponse response = from(getNoUserByEmail(email));
+        return BaseResponse.builder()
+                .data(response)
+                .message("User by email")
                 .success(Boolean.TRUE)
                 .httpStatus(HttpStatus.OK)
                 .build();

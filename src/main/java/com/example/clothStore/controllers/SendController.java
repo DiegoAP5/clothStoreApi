@@ -21,6 +21,12 @@ public class SendController {
         return new ResponseEntity<>(baseResponse,baseResponse.getHttpStatus());
     }
 
+    @GetMapping()
+    public ResponseEntity<BaseResponse> getAllSend(){
+        BaseResponse baseResponse = service.listSend();
+        return new ResponseEntity<>(baseResponse,baseResponse.getHttpStatus());
+    }
+
     @GetMapping("user/{id}/status/{statusName}")
     public ResponseEntity<BaseResponse> getSendByStatus(@PathVariable Long id, @PathVariable String statusName){
         BaseResponse baseResponse = service.getSendByUserIdAndStatus(id,statusName);

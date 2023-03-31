@@ -8,10 +8,7 @@ import com.example.clothStore.controllers.excepcion.ClothExcepcion;
 import com.example.clothStore.entities.*;
 import com.example.clothStore.entities.Projections.RefundProjection;
 import com.example.clothStore.repositories.IRefundRepository;
-import com.example.clothStore.services.interfaces.IOrderService;
-import com.example.clothStore.services.interfaces.IRefundService;
-import com.example.clothStore.services.interfaces.IStatusService;
-import com.example.clothStore.services.interfaces.IUserService;
+import com.example.clothStore.services.interfaces.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -33,6 +30,9 @@ public class RefundServiceImpl implements IRefundService {
 
     @Autowired
     private IUserService userService;
+
+    @Autowired
+    private ISNSService snsService;
 
     @Override
     public Refund findRefundById(Long id) {
@@ -62,6 +62,17 @@ public class RefundServiceImpl implements IRefundService {
     }
 
     @Override
+    public BaseResponse listRefund() {
+        List<RefundResponse> response = repository.listRefund().stream().map(this::from).collect(Collectors.toList());
+        return BaseResponse.builder()
+                .data(response)
+                .message("All refund")
+                .success(Boolean.TRUE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
+    @Override
     public BaseResponse getRefundByUserIdAndStatus(Long id, String statusName) {
         Status status = statusService.findStatusByName(statusName);
         List<RefundResponse> response = repository.getRefundByUserIdAndStatus(id,status.getId()).stream().map(this::from).collect(Collectors.toList());
@@ -78,6 +89,9 @@ public class RefundServiceImpl implements IRefundService {
         Refund refund = new Refund();
         refund = create(request,refund);
         RefundResponse response =from(repository.save(refund));
+        String message = "Hemos recibido su reembolso y se encuentra en " + refund.getStatus().getName();
+        String subject = "Reembolso creado para el usuario " + refund.getUser().getName();
+        snsService.sendNotification(message, subject,refund.getUser().getEmail());
         return BaseResponse.builder()
                 .data(response)
                 .message("Refund created")
@@ -106,6 +120,9 @@ public class RefundServiceImpl implements IRefundService {
     @Override
     public Refund updateStatus(Long id, String statusName) {
         Refund refund = setStatus(id,statusName);
+        String message = "Hemos procesado su reembolso y sen encuentra en " + refund.getStatus().getName() + " el reembolso a la tarjeta " + refund.getUser().getCardNumber() + " se encuentra en " + refund.getStatus().getName();
+        String subject = "Estado de su reembolso " + refund.getUser().getName();
+        snsService.sendNotification(message, subject,refund.getUser().getEmail());
         return repository.save(refund);
     }
 

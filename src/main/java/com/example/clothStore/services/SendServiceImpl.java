@@ -43,6 +43,16 @@ public class SendServiceImpl implements ISendService {
         return repository.findById(id).orElseThrow(() -> new ClothExcepcion("Send not found "));
     }
 
+    public BaseResponse listSend(){
+        List<SendResponse> response = repository.listSends().stream().map(this::from).collect(Collectors.toList());
+        return BaseResponse.builder()
+                .data(response)
+                .message("All sends")
+                .success(Boolean.TRUE)
+                .httpStatus(HttpStatus.OK)
+                .build();
+    }
+
     @Override
     public BaseResponse getSendById(Long id) {
         SendResponse response = from(repository.getSendById(id));
@@ -78,7 +88,9 @@ public class SendServiceImpl implements ISendService {
         Send send = new Send();
         send = create(request,send);
         response = from(repository.save(send));
-
+        String message = "Orden recibida y esta en proceso de envio " + send.getStatus().getName();
+        String subject = "Orden con guia " + send.getGuide();
+        snsService.sendNotification(message, subject,send.getUser().getEmail());
         return BaseResponse.builder()
                 .data(response)
                 .message("Send created")

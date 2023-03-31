@@ -10,6 +10,6 @@ public interface IUserRepository extends JpaRepository<User, Long> {
 
     User getUserByName(String name);
     @Query(value = "select users.* from users "+
-            "where users.role = :admin",nativeQuery = true)
-    User getUserByRole(String admin);
+            "where users.email = :email",nativeQuery = true)
+    User getUserByEmail(String email);
 }

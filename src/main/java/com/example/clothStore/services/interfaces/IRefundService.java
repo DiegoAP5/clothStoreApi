@@ -13,6 +13,8 @@ public interface IRefundService {
 
     BaseResponse getRefundByUserId(Long id);
 
+    BaseResponse listRefund();
+
     BaseResponse getRefundByUserIdAndStatus(Long id, String statusName);
 
     BaseResponse create(CreateRefundRequest request);

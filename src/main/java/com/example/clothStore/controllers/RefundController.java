@@ -15,6 +15,12 @@ public class RefundController {
     @Autowired
     private IRefundService service;
 
+    @GetMapping()
+    public ResponseEntity<BaseResponse> getAllRefund(){
+        BaseResponse baseResponse = service.listRefund();
+        return new ResponseEntity<>(baseResponse,baseResponse.getHttpStatus());
+    }
+
     @GetMapping("user/{id}")
     public ResponseEntity<BaseResponse> getRefundByUserId(@PathVariable Long id){
         BaseResponse baseResponse = service.getRefundByUserId(id);
@@ -34,9 +40,9 @@ public class RefundController {
     }
 
     @PostMapping
-    public ResponseEntity<BaseResponse> create(@RequestBody @Valid CreateRefundRequest request){
+    public ResponseEntity<BaseResponse> create(@RequestBody @Valid CreateRefundRequest request) {
         BaseResponse baseResponse = service.create(request);
-        return new ResponseEntity<>(baseResponse,baseResponse.getHttpStatus());
+        return new ResponseEntity<>(baseResponse, baseResponse.getHttpStatus());
     }
 
     @PutMapping("{id}")

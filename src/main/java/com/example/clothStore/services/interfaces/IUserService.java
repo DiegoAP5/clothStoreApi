@@ -16,6 +16,8 @@ public interface IUserService {
 
     BaseResponse getUserByName(String name);
 
+    BaseResponse getUserByEmail(String email);
+
     BaseResponse create(CreateUserRequest request);
 
     void delete(Long id);

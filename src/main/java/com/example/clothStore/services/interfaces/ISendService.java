@@ -11,6 +11,8 @@ public interface ISendService {
 
     BaseResponse getSendById(Long id);
 
+    BaseResponse listSend();
+
     BaseResponse getSendByUserIdAndStatus(Long id, String statusName);
 
     BaseResponse getSendByUserId(Long id);

@@ -32,6 +32,12 @@ public class UserController {
         return new ResponseEntity<>(baseResponse,baseResponse.getHttpStatus());
     }
 
+    @GetMapping("email/{userName}")
+    public ResponseEntity<BaseResponse> getUserByEmail(@PathVariable String userName){
+        BaseResponse baseResponse = service.getUserByEmail(userName);
+        return new ResponseEntity<>(baseResponse,baseResponse.getHttpStatus());
+    }
+
     @PostMapping
     public ResponseEntity<BaseResponse> create(@RequestBody @Valid CreateUserRequest request){
         BaseResponse baseResponse = service.create(request);
