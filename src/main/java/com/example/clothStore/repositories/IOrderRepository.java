@@ -12,23 +12,23 @@ import java.util.List;
 public interface IOrderRepository extends JpaRepository<Order,Long> {
 
     @Query(value = "select orders.*, users.id as userId, cloths.id as clothId, status.name as statusName from orders " +
-            "inner join users on orders.user_id = users.id" +
-            "inner join cloths on orders.cloth_id = cloths.id" +
-            "inner join status on orders.status_id = status.id" +
+            "inner join users on orders.user_id = users.id " +
+            "inner join cloths on orders.cloth_id = cloths.id " +
+            "inner join status on orders.status_id = status.id " +
             "where orders.user_id =:userId",nativeQuery = true)
     List<OrderProjection> listAllOrdersByUserId(Long userId);
 
     @Query(value = "select orders.*, users.id as userId, cloths.id as clothId, status.name as statusName from orders " +
-            "inner join users on orders.user_id = users.id" +
-            "inner join cloths on orders.cloth_id = cloths.id" +
-            "inner join status on orders.status_id = status.id" +
+            "inner join users on orders.user_id = users.id " +
+            "inner join cloths on orders.cloth_id = cloths.id " +
+            "inner join status on orders.status_id = status.id " +
             "where orders.user_id =:userId and orders.status_id =:statusId",nativeQuery = true)
     List<OrderProjection> listAllOrdersByUserIdAndStatus(Long userId, Long statusId);
 
     @Query(value = "select orders.*, users.id as userId, cloths.id as clothId, status.name as statusName from orders " +
-            "inner join users on orders.user_id = users.id" +
-            "inner join cloths on orders.cloth_id = cloths.id" +
-            "inner join status on orders.status_id = status.id" +
+            "inner join users on orders.user_id = users.id " +
+            "inner join cloths on orders.cloth_id = cloths.id " +
+            "inner join status on orders.status_id = status.id " +
             "where orders.id =:id",nativeQuery = true)
     OrderProjection getOrderById(Long id);
 }

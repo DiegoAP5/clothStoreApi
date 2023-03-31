@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 public interface IUserRepository extends JpaRepository<User, Long> {
 
     User getUserByName(String name);
-    @Query(value = "select users.* from users"+
+    @Query(value = "select users.* from users "+
             "where users.role = :admin",nativeQuery = true)
     User getUserByRole(String admin);
 }
