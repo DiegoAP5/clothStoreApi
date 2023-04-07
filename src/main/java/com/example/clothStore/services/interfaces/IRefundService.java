@@ -23,5 +23,5 @@ public interface IRefundService {
 
     void delete(Long id);
 
-    Refund updateStatus(Long id, String statusName);
+    Refund updateStatus(Long id, String statusName, String declaration);
 }

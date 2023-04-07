@@ -118,18 +118,19 @@ public class RefundServiceImpl implements IRefundService {
     }
 
     @Override
-    public Refund updateStatus(Long id, String statusName) {
-        Refund refund = setStatus(id,statusName);
-        String message = "Hemos procesado su reembolso y sen encuentra en " + refund.getStatus().getName() + " el reembolso a la tarjeta " + refund.getUser().getCardNumber() + " se encuentra en " + refund.getStatus().getName();
+    public Refund updateStatus(Long id, String statusName, String declaration) {
+        Refund refund = setStatus(id,statusName, declaration);
+        String message = refund.getDeclaration()+ " el reembolso a la tarjeta " + refund.getUser().getCardNumber() + " se encuentra en " + refund.getStatus().getName();
         String subject = "Estado de su reembolso " + refund.getUser().getName();
         snsService.sendNotification(message, subject,refund.getUser().getEmail());
         return repository.save(refund);
     }
 
-    private Refund setStatus(Long id, String statusName){
+    private Refund setStatus(Long id, String statusName,String declaration){
         Refund refund = findRefundById(id);
         Status status1 = statusService.findStatusByName(statusName);
         refund.setStatus(status1);
+        refund.setDeclaration(declaration);
         return refund;
     }
 

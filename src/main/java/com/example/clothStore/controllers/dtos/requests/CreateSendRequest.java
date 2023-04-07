@@ -21,11 +21,6 @@ public class CreateSendRequest {
     @NotNull @NotBlank
     private String status;
 
-    @PastOrPresent
-    private LocalDate orderDate;
-
-    @FutureOrPresent
-    private LocalDate deliveryDate;
 
     @NotNull @NotBlank
     private String address;

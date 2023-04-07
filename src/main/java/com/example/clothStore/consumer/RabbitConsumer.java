@@ -4,6 +4,7 @@ package com.example.clothStore.consumer;
 import com.example.clothStore.Notification.RabbitConfigure;
 import com.example.clothStore.Notification.RabbitNotification;
 import com.example.clothStore.controllers.dtos.requests.CreateOrderRequest;
+import com.example.clothStore.controllers.dtos.requests.UpdateRefundRequest;
 import com.example.clothStore.controllers.dtos.requests.UpdateSendRequest;
 import com.example.clothStore.services.interfaces.IOrderService;
 import com.example.clothStore.services.interfaces.IRefundService;
@@ -40,9 +41,9 @@ public class RabbitConsumer {
     }
 
     @RabbitListener(queues = "notification")
-    public void refund(UpdateSendRequest request){
+    public void refund(UpdateRefundRequest request){
         log.info("Received refund status: {}",request);
-        refundService.updateStatus(request.getId(), request.getStatus());
+        refundService.updateStatus(request.getId(), request.getStatus(),request.getDeclaration());
         makeSlow();
     }
 

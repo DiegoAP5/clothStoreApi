@@ -17,6 +17,5 @@ public class CreateRefundRequest {
     @NotNull @NotBlank
     private String status;
 
-    @NotNull @NotBlank
     private String declaration;
 }
